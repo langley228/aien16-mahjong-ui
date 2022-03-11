@@ -1,0 +1,14 @@
+.Montserrat {
+    font-family: 'Montserrat', sans-serif;
+    text-decoration: None;
+  }
+a {
+  text-decoration: None;
+}
+.bgColor {
+  background-color: #AEFEFF;
+}
+.navbarSty{
+  background-color: #4FBDBA;
+  border-radius: 10px;
+}
