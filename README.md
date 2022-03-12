@@ -1,1 +1,0 @@
-# aien16-mahjong-ui
