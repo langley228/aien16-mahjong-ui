@@ -320,20 +320,33 @@
             $group.empty();
         });
 
-        let inIds = [1, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 9];
-        let outIds = [28, 28, 28];
-        let lastId = 4;
-        let tile = $('#divSelTile').find('img.tile[data-id="' + lastId + '"]').parent();
-        $('#lastgroup').append(tile[0].outerHTML);
+        // init tile
+        let tile = $('#divSelTile').find('img.tile[data-id="' + 1 + '"]').parent();
+
+        // get inIds with parameters passed from flask
+        let inIds = '{{ inIds }}';
+        inIds = inIds.split(',');
         inIds.forEach(id => {
             tile = $('#divSelTile').find('img.tile[data-id="' + id + '"]').parent();
             $('#ingroup').append(tile[0].outerHTML);
         });
+
+        // get outIds with parameters passed from flask
+        let outIds = '{{ outIds }}';
+        outIds = outIds.split(',');
         outIds.forEach(id => {
             tile = $('#divSelTile').find('img.tile[data-id="' + id + '"]').parent();
             $('#outgroup').append(tile[0].outerHTML);
         });
 
+        // get lastId with parameter passed from flask
+        let lastId = '{{ lastId }}';
+        lastId = lastId.split(',');
+        lastId.forEach(id => {
+            tile = $('#divSelTile').find('img.tile[data-id="' + id + '"]').parent();
+            $('#lastgroup').append(tile[0].outerHTML);
+        });
+        
         $('#btnCallApi').click(function () {
             let $outgroup = $('#outgroup img.tile');
             let $ingroup = $('#ingroup img.tile');
