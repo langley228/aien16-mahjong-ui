@@ -1,13 +1,14 @@
-## database init
+## Database deploy
 
 ### set flask app to environment
+open a terminal at your project path
 - for linux
 ```
-export FLASK_APP=twittor
+export FLASK_APP=mahjong
 ```
 - for windows
 ```
-set FLASK_APP=twittor
+set FLASK_APP=mahjong
 ```
 
 ### database init
