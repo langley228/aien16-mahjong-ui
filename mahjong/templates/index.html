@@ -410,28 +410,28 @@
           reqData.dealerId = Number($($dealer[0]).data("id"));
         }
 
-        // $.ajax({
-        //   type: "post",
-        //   url: "https://aien16.azurewebsites.net/api/canwin",
-        //   contentType: "application/json",
-        //   data: JSON.stringify(reqData),
-        //   dataType: "json",
-        //   success: function (data) {
-        //     if (data.canWin) {
-        //       let str = "胡了!";
-        //       if (data.patterns.length) {
-        //         str += "\n=============";
-        //         data.patterns.forEach((p) => {
-        //           str += "\n" + p.name;
-        //         });
-        //       } else str = "雞胡!!";
-        //       alert(str);
-        //     } else alert("相公");
-        //   },
-        //   error: function (err) {
-        //     console.log(err);
-        //   },
-        // });
+        $.ajax({
+          type: "post",
+          url: "https://aien16t01mjapi.azurewebsites.net/api/canwin",
+          contentType: "application/json",
+          data: JSON.stringify(reqData),
+          dataType: "json",
+          success: function (data) {
+            if (data.canWin) {
+              let str = "胡了!";
+              if (data.patterns.length) {
+                str += "\n=============";
+                data.patterns.forEach((p) => {
+                  str += "\n" + p.name;
+                });
+              } else str = "雞胡!!";
+              alert(str);
+            } else alert("相公");
+          },
+          error: function (err) {
+            console.log(err);
+          },
+        });
 
         // $.post('http://localhost:3001/api/canwin', JSON.stringify(reqData), function (data) {
 
