@@ -25,9 +25,15 @@ login_manager.login_view = 'login'
 
 from mahjong.models.user import User, load_user
 from mahjong.forms import LoginForm, RegisterFrom
+from mahjong.view.detection import detection
+
+app.register_blueprint(detection,
+                       url_prefix='/',
+                       static_folder='static',
+                       template_folder='templates')
 
 
-@app.route("/")
+@app.route("/ans")
 def index():
     # get in from request url
     inIds = request.args.get('inIds')
