@@ -20,3 +20,8 @@ flask db init
 flask db migrate -m "enter your commit message here"
 flask db upgrade
 ```
+
+### azure run strat 
+```
+gunicorn --bind=0.0.0.0 --timeout 600 mahjong:app
+```
