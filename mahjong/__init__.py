@@ -25,16 +25,14 @@ login_manager.login_view = 'login'
 
 from mahjong.models.user import User, load_user
 from mahjong.forms import LoginForm, RegisterFrom
-from mahjong.view.detection import detection
 
-app.register_blueprint(detection,
-                       url_prefix='/',
-                       static_folder='static',
-                       template_folder='templates')
 
+@app.route('/')
+def index():    
+    return render_template('index.html')
 
 @app.route("/ans")
-def index():
+def ans():
     # get in from request url
     inIds = request.args.get('inIds')
     outIds = request.args.get('outIds')
@@ -49,7 +47,7 @@ def index():
         lastId = getIds(lastId)
 
     return render_template(
-        'index.html', inIds=inIds, outIds=outIds, lastId=lastId
+        'ans.html', inIds=inIds, outIds=outIds, lastId=lastId
     )
 
 def getIds(ids):
@@ -65,7 +63,7 @@ def getIds(ids):
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('ans'))
     form = RegisterFrom()
     if form.validate_on_submit():
         user = User(username=form.username.data, email = form.email.data)
@@ -78,7 +76,7 @@ def register():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('ans'))
 
     form = LoginForm(meta={'csrf': False})
     if form.validate_on_submit():
@@ -90,7 +88,7 @@ def login():
         # next_page = request.args.get('next')
         # if next_page:
         #     return redirect(next_page)
-        return redirect(url_for('index'))
+        return redirect(url_for('ans'))
 
     return render_template('login.html', title="Login", form=form
     )
