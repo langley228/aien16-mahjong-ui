@@ -1,9 +1,6 @@
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+{% extends "base.html" %}
+
+{% block content %}
     <style>
       .tile {
         max-width: 100%;
@@ -30,8 +27,8 @@
         border-image-width: initial;
         border-image-outset: initial;
         border-image-repeat: initial;
-        width: 20px;
-        height: 29px;
+        width: 40px;
+        height: 58px;
         margin: 1px;
         padding: 1px;
         padding-top: 4px;
@@ -94,7 +91,7 @@
           </div>
           
           <span style="display:inline-block;width: 20px;word-wrap: break-word ;">圈風</span>
-          <div class="tile-group" id="prevailing" style="width: 170px;">
+          <div class="tile-group" id="prevailing" style="width: 172px;">
               <div class="tile-div wind sel">
                   <img class="tile" src="../static/Regular/windeast.png" data-id="28">
               </div>
@@ -109,7 +106,7 @@
               </div>
           </div>
           <span style="display:inline-block;width: 20px;word-wrap: break-word ;">門風</span>
-          <div class="tile-group" id="dealer" style="width: 170px;">
+          <div class="tile-group" id="dealer" style="width: 172px;">
               <div class="tile-div wind sel">
                   <img class="tile" src="../static/Regular/windeast.png" data-id="28">
               </div>
@@ -159,7 +156,7 @@
         </h2>
       </div>
       <br />
-      <div class="tile-group" style="width: 255px">
+      <div class="tile-group" style="width: 382px">
         <div class="tile-div">
           <img class="tile" src="../static/Regular/dot1.png" data-id="1" />
         </div>
@@ -189,7 +186,7 @@
         </div>
       </div>
       <br />
-      <div class="tile-group" style="width: 255px">
+      <div class="tile-group" style="width: 382px">
         <div class="tile-div">
           <img class="tile" src="../static/Regular/bamboo1.png" data-id="10" />
         </div>
@@ -219,7 +216,7 @@
         </div>
       </div>
       <br />
-      <div class="tile-group" style="width: 255px">
+      <div class="tile-group" style="width: 382px">
         <div class="tile-div">
           <img class="tile" src="../static/Regular/character1.png" data-id="19" />
         </div>
@@ -249,7 +246,7 @@
         </div>
       </div>
       <br />
-      <div class="tile-group" style="width: 200px">
+      <div class="tile-group" style="width: 298px">
         <div class="tile-div">
           <img class="tile" src="../static/Regular/windeast.png" data-id="28" />
         </div>
@@ -273,7 +270,7 @@
         </div>
       </div>
       <br />
-      <div class="tile-group" style="width: 230px">
+      <div class="tile-group" style="width: 340px">
         <div class="tile-div">
           <img class="tile" src="../static/Regular/springflower.png" data-id="35" />
         </div>
@@ -440,4 +437,4 @@
       });
     </script>
   </body>
-</html>
+{% endblock %}
