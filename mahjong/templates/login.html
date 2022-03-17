@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link href="{{ url_for('static', filename='styles/login.css') }}" rel="stylesheet">
+<main class="form-signin">
+  <form action="" method="post">
+    {{ form.hidden_tag() }}
+    <img class="mb-4" src="{{ url_for('static', filename='img/smolAmeJAM3.gif') }}" alt="smolAmeJAM">
+    <h1 class="h3 mb-3 fw-normal">Greetings!</h1>
+
+    <div class="form-floating">
+      <!-- <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"> -->
+      {{ form.username(class="form-control", id="floatingInput", placeholder="username")  }} 
+      <label for="floatingInput">Username</label>
+    </div>
+    <div class="form-floating">
+      <!-- <input type="password" class="form-control" id="floatingPassword" placeholder="Password"> -->
+      {{ form.password(class="form-control", id="floatingPassword", placeholder="Password") }}
+      <label for="floatingPassword">Password</label>
+    </div>
+
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
+    <p>
+        <a href="{{ url_for('register') }}">New User?</a> or 
+        <!-- <a href="{{ url_for('register') }}">Forgot Password?</a>  -->
+    </p>
+    <p class="mt-5 mb-3 text-muted">© 2020–2021</p>
+  </form>
+</main>
+{% endblock %}

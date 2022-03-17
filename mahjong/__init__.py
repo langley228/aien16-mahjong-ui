@@ -1,15 +1,13 @@
-from flask import Flask, url_for, redirect, render_template, request
+from flask import Flask, url_for, redirect, render_template, flash, abort, session, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import LoginManager
-from mahjong.config import Config
-
-
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 # flask init
 app = Flask(__name__)
 
 # config init
+from mahjong.config import Config
 app.config.from_object(Config)
 
 # database init
@@ -26,6 +24,8 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 from mahjong.models.user import User, load_user
+from mahjong.forms import LoginForm, RegisterFrom
+
 
 @app.route("/")
 def index():
@@ -56,5 +56,60 @@ def getIds(ids):
 
     return ids
 
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegisterFrom()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email = form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Registration', form=form)
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+
+    form = LoginForm(meta={'csrf': False})
+    if form.validate_on_submit():
+        u = User.query.filter_by(username=form.username.data).first()
+        if u is None or not u.check_password(form.password.data):
+            flash('invalid username or password')
+            return redirect(url_for('login'))
+        login_user(u)
+        # next_page = request.args.get('next')
+        # if next_page:
+        #     return redirect(next_page)
+        return redirect(url_for('index'))
+
+    return render_template('login.html', title="Login", form=form
+    )
+
+@app.route("/logout", methods=['GET', 'POST'])
+def logout():
+    for key in list(session.keys()):
+        session.pop(key)
+    session.pop("userinfo", None)
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route("/<username>", methods=['GET', 'POST'])
+def profile(username):
+    # get current user as u
+    u = User.query.filter_by(username=username).first()
+
+    # check whether current user is available
+    if u is None:
+        abort(404)
+    
+    return render_template(
+        'profile.html',
+        title='Profile',
+        user=u
+    )
 if __name__ == '__main__' :
     app.run()
