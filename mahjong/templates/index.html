@@ -219,7 +219,7 @@
         )}&inIds=${uidata.inIds.join(",")}${
           uidata.lastId != 0 ? "&lastId=" + uidata.lastId : ""
         }`;
-        window.location.href = `{{ url_for('index') }}${queryString}`;
+        window.location.href = `{{ url_for('ans') }}${queryString}`;
         //alert(queryString);
         anslist = [];
         stop = false;
