@@ -62,20 +62,14 @@
 <br>
   <div id="divSelTile" class="container">
     <!--  取消單擊選牌改用拖曳 display: none; -->
-    <div>
+    <div >
       <h3>
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="radio" id="radio0" name="radioSel" value="0" data-group="outgroup">
-          <label class="form-check-label" for="radio0"><b>吃、碰、明槓</b></label>
-        </div>
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="radio" id="radio1" name="radioSel" value="1" data-group="ingroup" checked>
-          <label class="form-check-label" for="radio1"><b>手牌</b></label>
-        </div>
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="radio" id="radio2" name="radioSel" value="2" data-group="lastgroup">
-          <label class="form-check-label selfDrawnChk" for="radio2"><b>自摸</b></label>
-        </div>
+          <input class="btn-check" type="radio" id="radio0" name="radioSel" value="0" data-group="outgroup">
+          <label class="btn btn-outline-danger" for="radio0"><b>吃、碰、明槓</b></label>
+          <input class="btn-check" type="radio" id="radio1" name="radioSel" value="1" data-group="ingroup" checked>
+          <label class="btn btn-outline-danger" for="radio1"><b>手牌</b></label>
+          <input class="btn-check" type="radio" id="radio2" name="radioSel" value="2" data-group="lastgroup">
+          <label class="btn btn-outline-danger selfDrawnChk" for="radio2"><b>自摸</b></label>
       </h3>
     </div>
     <br />
@@ -233,6 +227,7 @@
 
     $('.dragSource .tile-div:not(.wind)').attr('draggable', 'true').attr('ondragstart', 'dragStart(event)').children('.tile').attr('draggable', 'false');
 
+
     $('#prevailing img').attr('draggable', 'false').attr('ondragstart',"return false;");
     $('#dealer img').attr('draggable', 'false').attr('ondragstart',"return false;");
 
@@ -271,6 +266,7 @@
       return false
     }
   </script>
+  
   <script>
     $(".button-54").click(function () {
       let $btn = $(this);
