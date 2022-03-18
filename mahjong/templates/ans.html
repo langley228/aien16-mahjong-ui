@@ -62,7 +62,7 @@
 <br>
   <div id="divSelTile" class="container">
     <!--  取消單擊選牌改用拖曳 display: none; -->
-    <div style="display: none;">
+    <div>
       <h3>
         <div class="form-check form-switch">
           <input class="form-check-input" type="radio" id="radio0" name="radioSel" value="0" data-group="outgroup">
@@ -284,7 +284,7 @@
       .find(".tile-div>img.tile")
       .click(function () {
         //取消單擊選牌改用拖曳
-        return;
+        //return;
         let $div = $(this).parent();
         let $img = $(this);
         let $checkbox = $('input[name="radioSel"]:checked');
