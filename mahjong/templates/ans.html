@@ -276,7 +276,7 @@
     let urlParams = new URLSearchParams(window.location.search);
     // get inIds with parameters passed from flask
     let inIds = urlParams.get("inIds"); //'1,13,14,15,2,22,23,24,25,3';
-    if (inIds != null){
+    if (inIds != null && inIds!=''){
       inIds = inIds.split(",");
       inIds.forEach((id) => {
       tile = $("#divSelTile")
@@ -287,7 +287,7 @@
     }
     // get outIds with parameters passed from flask
     let outIds = urlParams.get("outIds"); //"13,14,15,2,3,35,4";
-    if (outIds != null){
+    if (outIds != null && outIds!=''){
       outIds = outIds.split(",");
       outIds.forEach((id) => {
         tile = $("#divSelTile")
@@ -298,7 +298,7 @@
     }
     // get lastId with parameter passed from flask
     let lastId = urlParams.get("lastId");
-    if (lastId != null){
+    if (lastId != null && lastId!=''){
       lastId = lastId.split(",");
       lastId.forEach((id) => {
         tile = $("#divSelTile")
