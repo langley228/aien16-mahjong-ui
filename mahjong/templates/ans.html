@@ -2,19 +2,20 @@
 
 {% block content %}
 <link href="{{ url_for('static', filename='styles/index.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='styles/button.css') }}" rel="stylesheet">
 
 <body>
   <div id="divData" class="container">
-    <h2><button class="btn-clear" style="margin-right: 20px;">清除</button>吃、碰、明槓</h2>
+    <h2><button class="button-54" style="margin-right: 20px;">清除</button><b>吃、碰、明槓</b></h2>
     <div class="tile-group" id="outgroup">
     </div>
     <br>
-    <h2><button class="btn-clear" style="margin-right: 20px;">清除</button>手牌</h2>
+    <h2><button class="button-54" style="margin-right: 20px;">清除</button><b>手牌</b></h2>
     <div class="tile-group" id="ingroup">
     </div>
     <br>
     <div class="containerGp">
-        <h2><button class="btn-clear" style="margin-right: 20px;">清除</button> 胡牌</h2>
+        <h2><button class="button-54" style="margin-right: 20px;">清除</button><b>胡牌</b></h2>
         <span style="display:inline-block;width: 20px;word-wrap: break-word ;">
           <input id="checkSelfDrawn" type="checkbox" checked>
             <label for="checkbox0">自摸</label>
@@ -54,38 +55,28 @@
         </div>
     </div>
     <br>
-    <button value="" id="btnCallApi">
+    <button class="button-74" value="" id="btnCallApi">
         <h2>驗證</h2>
     </button>
     <br>
 </div>
+<br>
   <div id="divSelTile" class="container">
     <div>
-      <h2>
-        選牌 :
-        <input
-          id="radio0"
-          type="radio"
-          name="radioSel"
-          value="0"
-          data-group="outgroup"
-        /><label for="radio0">吃、碰、明槓</label>
-        <input
-          id="radio1"
-          type="radio"
-          name="radioSel"
-          checked=""
-          value="1"
-          data-group="ingroup"
-        /><label for="radio1">手牌</label>
-        <input
-          id="radio2"
-          type="radio"
-          name="radioSel"
-          value="2"
-          data-group="lastgroup"
-        /><label for="radio2">胡牌</label>
-      </h2>
+      <h3>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="radio" id="radio0" name="radioSel" value="0" data-group="outgroup">
+          <label class="form-check-label" for="radio0"><b>吃、碰、明槓</b></label>
+        </div>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="radio" id="radio1" name="radioSel" value="1" data-group="ingroup" checked>
+          <label class="form-check-label" for="radio1"><b>手牌</b></label>
+        </div>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="radio" id="radio2" name="radioSel" value="2" data-group="lastgroup">
+          <label class="form-check-label" for="radio2"><b>胡牌</b></label>
+        </div>
+      </h3>
     </div>
     <br />
     <div class="tile-group" style="width: 382px">
@@ -235,7 +226,11 @@
     crossorigin="anonymous"
   ></script>
   <script>
-    $(".btn-clear").click(function () {
+    $(".button-54").click(function () {
+      let $btn = $(this);
+      $btn.parents("h2").nextAll(".tile-group:first").empty();
+    });
+    $(".button-74").click(function () {
       let $btn = $(this);
       $btn.parents("h2").nextAll(".tile-group:first").empty();
     });
