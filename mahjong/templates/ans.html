@@ -15,44 +15,43 @@
     </div>
     <br>
     <div class="containerGp">
-        <h2><button class="button-54" style="margin-right: 20px;">清除</button><b>胡牌</b></h2>
-        <span style="display:inline-block;width: 20px;word-wrap: break-word ;">
-          <input id="checkSelfDrawn" type="checkbox" checked>
-            <label for="checkbox0">自摸</label>
-        </span>
-        <div class="tile-group" id="lastgroup" style="width: 46px;">
-        </div>
-        
-        <span style="display:inline-block;width: 20px;word-wrap: break-word ;">圈風</span>
-        <div class="tile-group" id="prevailing" style="width: 172px;">
-            <div class="tile-div wind sel">
-                <img class="tile" src="{{ url_for('static', filename='Regular/windeast.png') }}" data-id="28">
-            </div>
-            <div class="tile-div wind">
-                <img class="tile" src="{{ url_for('static', filename='Regular/windsouth.png') }}" data-id="29">
-            </div>
-            <div class="tile-div wind">
-                <img class="tile" src="{{ url_for('static', filename='Regular/windwest.png') }}" data-id="30">
-            </div>
-            <div class="tile-div wind">
-                <img class="tile" src="{{ url_for('static', filename='Regular/windnorth.png') }}" data-id="31">
-            </div>
-        </div>
-        <span style="display:inline-block;width: 20px;word-wrap: break-word ;">門風</span>
-        <div class="tile-group" id="dealer" style="width: 172px;">
-            <div class="tile-div wind sel">
-                <img class="tile" src="{{ url_for('static', filename='Regular/windeast.png') }}" data-id="28">
-            </div>
-            <div class="tile-div wind">
-                <img class="tile" src="{{ url_for('static', filename='Regular/windsouth.png') }}" data-id="29">
-            </div>
-            <div class="tile-div wind">
-                <img class="tile" src="{{ url_for('static', filename='Regular/windwest.png') }}" data-id="30">
-            </div>
-            <div class="tile-div wind">
-                <img class="tile" src="{{ url_for('static', filename='Regular/windnorth.png') }}" data-id="31">
-            </div>
-        </div>
+      <h2><button class="button-54" style="margin-right: 20px;display: none;">清除</button><b>
+          <input type="checkbox" class="btn-check" id="checkSelfDrawn" autocomplete="off" checked>
+            <label class="btn btn-outline-primary selfDrawnChk" for="checkSelfDrawn" id="selfDrawnLabel"><b>自摸</b></label></b></h2>
+          <div class="tile-group" id="lastgroup" style="width: 46px;">
+          </div>
+    </div>
+    <div class="containerGp">
+      <span style="display:inline-block;width: 20px;word-wrap: break-word ;">圈風</span>
+      <div class="tile-group" id="prevailing" style="width: 172px;">
+          <div class="tile-div wind sel">
+              <img class="tile" src="{{ url_for('static', filename='Regular/windeast.png') }}" data-id="28">
+          </div>
+          <div class="tile-div wind">
+              <img class="tile" src="{{ url_for('static', filename='Regular/windsouth.png') }}" data-id="29">
+          </div>
+          <div class="tile-div wind">
+              <img class="tile" src="{{ url_for('static', filename='Regular/windwest.png') }}" data-id="30">
+          </div>
+          <div class="tile-div wind">
+              <img class="tile" src="{{ url_for('static', filename='Regular/windnorth.png') }}" data-id="31">
+          </div>
+      </div>
+      <span style="display:inline-block;width: 20px;word-wrap: break-word ;">門風</span>
+      <div class="tile-group" id="dealer" style="width: 172px;">
+          <div class="tile-div wind sel">
+              <img class="tile" src="{{ url_for('static', filename='Regular/windeast.png') }}" data-id="28">
+          </div>
+          <div class="tile-div wind">
+              <img class="tile" src="{{ url_for('static', filename='Regular/windsouth.png') }}" data-id="29">
+          </div>
+          <div class="tile-div wind">
+              <img class="tile" src="{{ url_for('static', filename='Regular/windwest.png') }}" data-id="30">
+          </div>
+          <div class="tile-div wind">
+              <img class="tile" src="{{ url_for('static', filename='Regular/windnorth.png') }}" data-id="31">
+          </div>
+      </div>
     </div>
     <br>
     <button class="button-74" value="" id="btnCallApi">
@@ -74,7 +73,7 @@
         </div>
         <div class="form-check form-switch">
           <input class="form-check-input" type="radio" id="radio2" name="radioSel" value="2" data-group="lastgroup">
-          <label class="form-check-label" for="radio2"><b>胡牌</b></label>
+          <label class="form-check-label selfDrawnChk" for="radio2"><b>自摸</b></label>
         </div>
       </h3>
     </div>
@@ -257,6 +256,15 @@
       $(this).addClass("sel");
     });
 
+    $("#checkSelfDrawn").click(function(){
+      if ($(this).prop('checked')) {        
+        $(".selfDrawnChk").html("<b>自摸</b>");
+      }
+      else {
+        $(".selfDrawnChk").html("<b>胡牌</b>")
+      }
+    });
+
     let aryGp = ["outgroup", "ingroup", "lastgroup"];
     aryGp.forEach((gp) => {
       let $group = $("#" + gp);
@@ -322,9 +330,10 @@
           reqData.inIds.push(Number($(ele).data("id")))
         );
       }
-
+      
       if ($lastgroup.length) {
         reqData.lastId = Number($($lastgroup[0]).data("id"));
+        // if 自摸傳true, 胡牌傳false
         if ($("#checkSelfDrawn").prop("checked")) reqData.isSelfDrawn = true;
       }
       if ($prevailing.length) {
