@@ -28,7 +28,9 @@
   border-image-repeat: initial;
   width: 40px;
   height: 58px;
-  margin: 1px;
+  margin: 5px;
+  margin-left: 10px;
+  margin-right:10px ;
   padding: 1px;
   padding-top: 4px;
 }
@@ -37,17 +39,18 @@
   /* justify-content: center;
     align-items: flex-start; */
   text-align: center;
+  max-width: max-content;
 }
 
 .tile-group {
   display: flex;
   margin: 0px auto;
-  width: 500px;
+  width: 700px;
   display: inline-block;
   border-width: 2px;
   border-color: rgb(150 150 150);
   border-style: dotted;
-  min-height: 29px;
+  min-height: 75px;
 }
 
 .wintext {
@@ -68,4 +71,22 @@
 h2 {
   margin: 5px;
   /* float: left; */
+}
+
+.dragSource{
+  width: 550px;
+}
+#source4{
+  width: 430px;
+}
+
+#source5{
+  width: 490px;
+}
+
+#prevailing{
+  width: 250px;
+}
+#dealer{
+  width: 250px;
 }

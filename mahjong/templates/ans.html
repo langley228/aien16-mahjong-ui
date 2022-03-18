@@ -7,23 +7,23 @@
 <body>
   <div id="divData" class="container">
     <h2><button class="button-54" style="margin-right: 20px;">清除</button><b>吃、碰、明槓</b></h2>
-    <div class="tile-group" id="outgroup">
+    <div class="tile-group drag-drop-container" id="outgroup">
     </div>
     <br>
     <h2><button class="button-54" style="margin-right: 20px;">清除</button><b>手牌</b></h2>
-    <div class="tile-group" id="ingroup">
+    <div class="tile-group drag-drop-container" id="ingroup">
     </div>
     <br>
     <div class="containerGp">
       <h2><button class="button-54" style="margin-right: 20px;display: none;">清除</button><b>
           <input type="checkbox" class="btn-check" id="checkSelfDrawn" autocomplete="off" checked>
             <label class="btn btn-outline-primary selfDrawnChk" for="checkSelfDrawn" id="selfDrawnLabel"><b>自摸</b></label></b></h2>
-          <div class="tile-group" id="lastgroup" style="width: 46px;">
+          <div class="tile-group drag-drop-container" id="lastgroup" style="width: 70px;">
           </div>
     </div>
     <div class="containerGp">
       <span style="display:inline-block;width: 20px;word-wrap: break-word ;">圈風</span>
-      <div class="tile-group" id="prevailing" style="width: 172px;">
+      <div class="tile-group" id="prevailing">
           <div class="tile-div wind sel">
               <img class="tile" src="{{ url_for('static', filename='Regular/windeast.png') }}" data-id="28">
           </div>
@@ -38,7 +38,7 @@
           </div>
       </div>
       <span style="display:inline-block;width: 20px;word-wrap: break-word ;">門風</span>
-      <div class="tile-group" id="dealer" style="width: 172px;">
+      <div class="tile-group" id="dealer">
           <div class="tile-div wind sel">
               <img class="tile" src="{{ url_for('static', filename='Regular/windeast.png') }}" data-id="28">
           </div>
@@ -61,7 +61,8 @@
 </div>
 <br>
   <div id="divSelTile" class="container">
-    <div>
+    <!--  取消單擊選牌改用拖曳 display: none; -->
+    <div style="display: none;">
       <h3>
         <div class="form-check form-switch">
           <input class="form-check-input" type="radio" id="radio0" name="radioSel" value="0" data-group="outgroup">
@@ -78,7 +79,7 @@
       </h3>
     </div>
     <br />
-    <div class="tile-group" style="width: 382px">
+    <div id='source1' class="tile-group dragSource">
       <div class="tile-div">
         <img class="tile" src="{{ url_for('static', filename='Regular/dot1.png') }}" data-id="1" />
       </div>
@@ -108,7 +109,7 @@
       </div>
     </div>
     <br />
-    <div class="tile-group" style="width: 382px">
+    <div id='source2' class="tile-group dragSource">
       <div class="tile-div">
         <img class="tile" src="{{ url_for('static', filename='Regular/bamboo1.png') }}" data-id="10" />
       </div>
@@ -138,7 +139,7 @@
       </div>
     </div>
     <br />
-    <div class="tile-group" style="width: 382px">
+    <div id='source3' class="tile-group dragSource">
       <div class="tile-div">
         <img class="tile" src="{{ url_for('static', filename='Regular/character1.png') }}" data-id="19" />
       </div>
@@ -168,7 +169,7 @@
       </div>
     </div>
     <br />
-    <div class="tile-group" style="width: 298px">
+    <div id='source4' class="tile-group dragSource">
       <div class="tile-div">
         <img class="tile" src="{{ url_for('static', filename='Regular/windeast.png') }}" data-id="28" />
       </div>
@@ -192,7 +193,7 @@
       </div>
     </div>
     <br />
-    <div class="tile-group" style="width: 340px">
+    <div id='source5' class="tile-group dragSource">
       <div class="tile-div">
         <img class="tile" src="{{ url_for('static', filename='Regular/springflower.png') }}" data-id="35" />
       </div>
@@ -224,6 +225,52 @@
     integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
     crossorigin="anonymous"
   ></script>
+  
+  <script src="{{ url_for('static', filename='js/TileGroupSvc.js') }}"></script>
+
+  <script>
+    let tileGroupSvc = TileGroupSvc();
+
+    $('.dragSource .tile-div:not(.wind)').attr('draggable', 'true').attr('ondragstart', 'dragStart(event)').children('.tile').attr('draggable', 'false');
+
+    $('#prevailing img').attr('draggable', 'false').attr('ondragstart',"return false;");
+    $('#dealer img').attr('draggable', 'false').attr('ondragstart',"return false;");
+
+    function dragStart(e) {
+      let parent = $(e.target).parent()[0];
+      let id = $(e.target).children('img').data().id;
+      e.dataTransfer.setData('text/plain', (id + ' ' + parent.id));
+    }
+
+    // Allow multiple dropped targets
+    let dropTargets = document.querySelectorAll('.drag-drop-container');
+    dropTargets.forEach(dropTarget => {
+      dropTarget.addEventListener('drop', dropped);
+      dropTarget.addEventListener('dragover', cancelDefault);
+    })
+
+    function dropped(e) {
+      if ($(e.target).is('.drag-drop-container')) {
+        var targetBox = e.target.id;
+      }else {
+        var targetBox = $(e.target).parents('.drag-drop-container')[0].id;
+      }
+      let data = e.dataTransfer.getData('text/plain');
+      let id = data.split(' ')[0];
+      let parentId = data.split(' ')[1];
+      let dragImg = $('#' + parentId + ' div img[data-id="' + id + '"]:first');
+      let dragObj = dragImg.parent('.tile-div');
+      if ($('#' + parentId).is('.dragSource')) dragObj.clone().appendTo('#' + targetBox);
+      else dragObj.appendTo('#' + targetBox);
+    }
+
+
+    function cancelDefault(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false
+    }
+  </script>
   <script>
     $(".button-54").click(function () {
       let $btn = $(this);
@@ -236,6 +283,8 @@
     $("#divSelTile")
       .find(".tile-div>img.tile")
       .click(function () {
+        //取消單擊選牌改用拖曳
+        return;
         let $div = $(this).parent();
         let $img = $(this);
         let $checkbox = $('input[name="radioSel"]:checked');
@@ -343,28 +392,42 @@
         reqData.dealerId = Number($($dealer[0]).data("id"));
       }
 
-      $.ajax({
-        type: "post",
-        url: "https://aien16t01mjapi.azurewebsites.net/api/canwin",
-        contentType: "application/json",
-        data: JSON.stringify(reqData),
-        dataType: "json",
-        success: function (data) {
-          if (data.canWin) {
-            let str = "胡了!";
-            if (data.patterns.length) {
-              str += "\n=============";
-              data.patterns.forEach((p) => {
-                str += "\n" + p.name;
-              });
-            } else str = "雞胡!!";
-            alert(str);
-          } else alert("相公");
-        },
-        error: function (err) {
-          console.log(err);
-        },
-      });
+      let data = tileGroupSvc.CanWin(reqData);
+      if (data.canWin) {
+        let str = "胡了!";
+        let points = 0;
+        if (data.patterns.length) {
+          str += "\n=============";
+          data.patterns.forEach((p) => {
+            str += "\n" + p.name + ' ' + p.point + ' 台';
+            points += p.point;
+          });
+          str += "\n===============\n共 " + points + ' 台';
+        } else str = "雞胡!!";
+        alert(str);
+      } else alert("相公");
+      // $.ajax({
+      //   type: "post",
+      //   url: "https://aien16t01mjapi.azurewebsites.net/api/canwin",
+      //   contentType: "application/json",
+      //   data: JSON.stringify(reqData),
+      //   dataType: "json",
+      //   success: function (data) {
+      //     if (data.canWin) {
+      //       let str = "胡了!";
+      //       if (data.patterns.length) {
+      //         str += "\n=============";
+      //         data.patterns.forEach((p) => {
+      //           str += "\n" + p.name;
+      //         });
+      //       } else str = "雞胡!!";
+      //       alert(str);
+      //     } else alert("相公");
+      //   },
+      //   error: function (err) {
+      //     console.log(err);
+      //   },
+      // });
 
       // $.post('http://localhost:3001/api/canwin', JSON.stringify(reqData), function (data) {
 
