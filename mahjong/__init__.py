@@ -31,7 +31,9 @@ from mahjong.forms import LoginForm, RegisterFrom
 def index():    
     return render_template('index.html')
 
+
 @app.route("/ans")
+@login_required
 def ans():
     # get in from request url
     inIds = request.args.get('inIds')
@@ -93,7 +95,9 @@ def login():
     return render_template('login.html', title="Login", form=form
     )
 
+
 @app.route("/logout", methods=['GET', 'POST'])
+@login_required
 def logout():
     for key in list(session.keys()):
         session.pop(key)
@@ -101,7 +105,9 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+
 @app.route("/<username>", methods=['GET', 'POST'])
+@login_required
 def profile(username):
     # get current user as u
     u = User.query.filter_by(username=username).first()
@@ -115,5 +121,6 @@ def profile(username):
         title='Profile',
         user=u
     )
+
 if __name__ == '__main__' :
     app.run()
