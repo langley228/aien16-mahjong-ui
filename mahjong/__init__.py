@@ -64,8 +64,11 @@ def getIds(ids):
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
+    # check current user's status
     if current_user.is_authenticated:
         return redirect(url_for('ans'))
+
+    # register form
     form = RegisterFrom()
     if form.validate_on_submit():
         user = User(username=form.username.data, email = form.email.data)
