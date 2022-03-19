@@ -83,6 +83,19 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('ans'))
 
+    # get certain aurgument from request url
+    inIds = request.args.get('inIds')
+    outIds = request.args.get('outIds')
+    lastId = request.args.get('lastId')
+
+    # get the data we need
+    if isinstance(inIds,str):
+        inIds = getIds(inIds)
+    if isinstance(outIds,str):
+        outIds = getIds(outIds)
+    if isinstance(lastId,str):
+        lastId = getIds(lastId)
+
     form = LoginForm(meta={'csrf': False})
     if form.validate_on_submit():
         u = User.query.filter_by(username=form.username.data).first()
@@ -90,10 +103,7 @@ def login():
             flash('invalid username or password')
             return redirect(url_for('login'))
         login_user(u)
-        # next_page = request.args.get('next')
-        # if next_page:
-        #     return redirect(next_page)
-        return redirect(url_for('ans'))
+        return redirect(url_for('ans', inIds=inIds, outIds=outIds, lastId=lastId))
 
     return render_template('login.html', title="Login", form=form
     )
