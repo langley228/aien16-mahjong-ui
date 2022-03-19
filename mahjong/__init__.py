@@ -47,10 +47,13 @@ def ans():
         outIds = getIds(outIds)
     if isinstance(lastId,str):
         lastId = getIds(lastId)
+    
+    print(f"inIds : {inIds}")
+    print(f"outIds : {outIds}")
+    print(f"lastId : {lastId}")
 
     return render_template(
-        'ans.html', inIds=inIds, outIds=outIds, lastId=lastId
-    )
+        'ans.html', inIds=inIds, outIds=outIds, lastId=lastId)
 
 def getIds(ids):
     # split ids string into list, and transform it into int
@@ -80,33 +83,29 @@ def register():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    next_page = request.args.get('next')
+
     if current_user.is_authenticated:
-        return redirect(url_for('ans'))
-
-    # get certain aurgument from request url
-    inIds = request.args.get('inIds')
-    outIds = request.args.get('outIds')
-    lastId = request.args.get('lastId')
-
-    # get the data we need
-    if isinstance(inIds,str):
-        inIds = getIds(inIds)
-    if isinstance(outIds,str):
-        outIds = getIds(outIds)
-    if isinstance(lastId,str):
-        lastId = getIds(lastId)
+        if next_page:
+            return redirect(next_page)
+        else:
+            return redirect(url_for('index'))
 
     form = LoginForm(meta={'csrf': False})
     if form.validate_on_submit():
+        # login user
         u = User.query.filter_by(username=form.username.data).first()
         if u is None or not u.check_password(form.password.data):
             flash('invalid username or password')
             return redirect(url_for('login'))
         login_user(u)
-        return redirect(url_for('ans', inIds=inIds, outIds=outIds, lastId=lastId))
+        
+        # redirect page
+        if next_page:
+            return redirect(next_page)
+        return redirect(url_for('index'))
 
-    return render_template('login.html', title="Login", form=form
-    )
+    return render_template('login.html', title="Login", form=form)
 
 
 @app.route("/logout", methods=['GET', 'POST'])
