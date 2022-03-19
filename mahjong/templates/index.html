@@ -31,9 +31,6 @@
       </div>
       <div class="col-sm-4">
         <select id="selmodel" disabled class="form-select" style="width: 200px">
-          <option value="{{ url_for('static', filename='tfjsmodels/Base/model.json') }}">
-            yolov5 Base
-          </option>
           <option value="{{ url_for('static', filename='tfjsmodels/Adam/model.json') }}" selected>
             yolov5 Adam
           </option>
@@ -42,6 +39,9 @@
           </option>
           <option value="{{ url_for('static', filename='tfjsmodels/sgd/model.json') }}">
             yolov5 sgd
+          </option>
+          <option value="{{ url_for('static', filename='tfjsmodels/sgd2/model.json') }}">
+            yolov5 sgd 2
           </option>
         </select>
       </div>
@@ -290,7 +290,7 @@
             console.log(Math.round(score.toFixed(3)) + "% / " + name);
           }
 
-          if (score > 40 && score < 100) {
+          if (score > 75 && score < 100) {
             colorIndex += 1;
             if (colorIndex > color.length - 1) {
               colorIndex = 0;
