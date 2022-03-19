@@ -716,6 +716,26 @@ function WindPattern() {
     };
 }
 
+function FlowerPattern() {
+    return {
+        Match: function (option) {
+            let result = [];
+            //isFlower
+            let { flowers, dealer } = option;
+            let rank = dealer.id - 27;
+            let count = flowers.filter(t => t.rank == rank).length;
+            if (count > 0) {
+                result.push({
+                    id: count > 1 ? `Flower_${rank}_x2` : `Flower_${rank}`,
+                    name: count > 1 ? `雙${rank}花` : `${rank}花`,
+                    point: count > 1 ? 2 : 1
+                });
+            }
+            return result;
+        }
+    };
+}
+
 function DragonsPattern() {
     return {
         Match: function (option) {
@@ -888,16 +908,45 @@ function AllConcealedHandPattern() {
         }
     }
 }
+function BookmakerPattern() {
+    return {
+        Match: function (option) {
+            let result = [];
+            let { isBookmaker, bookmakerRank } = option;
+            if (isBookmaker) {
+                if (bookmakerRank && bookmakerRank > 0) {
+                    result.push({
+                        id: `Bookmaker_${bookmakerRank}`,
+                        name: `莊家${bookmakerRank}拉${bookmakerRank}`,
+                        point: 2 * bookmakerRank + 1
+                    });
+                }
+                else {
+                    result.push({
+                        id: 'Bookmaker',
+                        name: '莊家',
+                        point: 1
+                    });
+                }
+            }
+
+            return result;
+        }
+    }
+
+}
 
 function PatternSvc() {
     const patternMatchs = [];
     //patternMatchs.push(new NoTerminalsPattern());
     patternMatchs.push(new AllTripletsPattern());
     patternMatchs.push(new WindPattern());
+    patternMatchs.push(new FlowerPattern());
     patternMatchs.push(new DragonsPattern());
     patternMatchs.push(new OneSuitPattern());
     patternMatchs.push(new ConcealedTripletsPattern());
     patternMatchs.push(new AllConcealedHandPattern());
+    patternMatchs.push(new BookmakerPattern());
     return {
         Matchs: function (option) {
             let result = [];
@@ -1083,7 +1132,7 @@ function TileGroupSvc() {
     let allTiles = SearchTile();
     return {
         CanWin: function (option) {
-            let { inIds, outIds, lastId, isSelfDrawn, prevailingId, dealerId } = option;
+            let { inIds, outIds, lastId, isSelfDrawn, prevailingId, dealerId, isBookmaker, bookmakerRank } = option;
             isSelfDrawn = isSelfDrawn === true;
             let result = {
                 canWin: false
@@ -1114,7 +1163,7 @@ function TileGroupSvc() {
             if (tile != null) {
                 concealed.push(tile);
             }
-            else{
+            else {
                 return result;
             }
             concealed = concealed.sort((a, b) => a.id - b.id);
@@ -1144,10 +1193,13 @@ function TileGroupSvc() {
             result.patterns = patternSvc.Matchs({
                 concealedGp,
                 exposedGp,
+                flowers: exposed.filter(t => t.isFlower),
                 tile,
                 isSelfDrawn,
                 prevailing,
-                dealer
+                dealer,
+                isBookmaker,
+                bookmakerRank
             })
             return result;
         }
