@@ -1114,6 +1114,9 @@ function TileGroupSvc() {
             if (tile != null) {
                 concealed.push(tile);
             }
+            else{
+                return result;
+            }
             concealed = concealed.sort((a, b) => a.id - b.id);
             exposed = exposed.sort((a, b) => a.id - b.id);
 
