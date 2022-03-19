@@ -974,7 +974,7 @@ function TileGroupSvc() {
                         if (rankSub[0] && rankSub[1] && rankSub[2]) {
                             if (rankSub[0].tiles.length > 0 && rankSub[1].tiles.length > 0 && rankSub[2].tiles.length > 0) {
                                 if (rankSub[0].tiles.length <= x && rankSub[1].tiles.length <= x && rankSub[2].tiles.length <= x) {
-                                    return addSequenceGroup(r);
+                                    return addSequenceGroup(rankSub[0].default.id);
                                 }
                             }
                         }
@@ -988,7 +988,7 @@ function TileGroupSvc() {
                     ];
                     if (rankSub[0] && rankSub[1] && rankSub[2]) {
                         if (rankSub[0].tiles.length > 0 && rankSub[1].tiles.length > 0 && rankSub[2].tiles.length > 0) {
-                            return addSequenceGroup(r);
+                            return addSequenceGroup(rankSub[0].default.id);
                         }
                     }
                 }
