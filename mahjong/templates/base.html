@@ -56,9 +56,11 @@
           </ul>
           <ul class="navbar-nav mb-2 mb-lg-0">
             {% if current_user.is_anonymous %}
+            {% if title != "Login" %}
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('login') }}">Login</a>
               </li>
+            {% endif %}
             {% else %}
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('profile', username = current_user.username) }}" style="display: none">Profile</a>
