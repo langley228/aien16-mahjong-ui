@@ -33,7 +33,7 @@ def index():
 
 
 @app.route("/ans")
-@login_required
+# @login_required
 def ans():
     # get in from request url
     inIds = request.args.get('inIds')
