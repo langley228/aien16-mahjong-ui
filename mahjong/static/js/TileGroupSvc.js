@@ -720,10 +720,38 @@ function FlowerPattern() {
     return {
         Match: function (option) {
             let result = [];
-            //isFlower
             let { flowers, dealer } = option;
             let rank = dealer.id - 27;
-            let count = flowers.filter(t => t.rank == rank).length;
+
+            let checkflowers = [];
+            if (flowers.length == 8) {
+                result.push({
+                    id: 'FlowerKing',
+                    name: '八仙過海',
+                    point: 8
+                });
+            }
+            else if (flowers.filter(t => t.id >= 35 && t.id <= 38).length == 4) {
+                result.push({
+                    id: 'FlowerGun_1',
+                    name: '花槓',
+                    point: 2
+                });
+                flowers.filter(t => t.id >= 39 && t.id <= 42).forEach(t => checkflowers.push(t));
+            }
+            else if (flowers.filter(t => t.id >= 39 && t.id <= 42).length == 4) {
+                result.push({
+                    id: 'FlowerGun_2',
+                    name: '花槓',
+                    point: 2
+                });
+                flowers.filter(t => t.id >= 35 && t.id <= 38).forEach(t => checkflowers.push(t));
+            }
+            else {
+                flowers.forEach(t => checkflowers.push(t));
+            }
+
+            let count = checkflowers.filter(t => t.rank == rank).length;
             if (count > 0) {
                 result.push({
                     id: count > 1 ? `Flower_${rank}_x2` : `Flower_${rank}`,
@@ -732,6 +760,7 @@ function FlowerPattern() {
                 });
             }
             return result;
+            //FlowerGun
         }
     };
 }
@@ -908,6 +937,8 @@ function AllConcealedHandPattern() {
         }
     }
 }
+
+//莊家連N拉N
 function BookmakerPattern() {
     return {
         Match: function (option) {
@@ -933,7 +964,134 @@ function BookmakerPattern() {
             return result;
         }
     }
+}
 
+//單釣
+function ReadySinglePattern() {
+    return {
+        Match: function (option) {
+            let result = [];
+            let { concealedGp, tile, readyTiles } = option;
+            let groups = [...concealedGp];
+            if (readyTiles.length == 1) {
+                let lastGp = groups.filter(g => g.isPair && g.tiles.filter(t => t.id === tile.id).length > 0);
+                if (lastGp.length == 1) {
+                    result.push({
+                        id: 'ReadySingle',
+                        name: '單吊',
+                        point: 1
+                    });
+                }
+            }
+            return result;
+        }
+    }
+}
+
+//中洞邊張
+function ReadyHoleEdgePattern() {
+    return {
+        Match: function (option) {
+            let result = [];
+            let { concealedGp, tile, readyTiles } = option;
+            let groups = [...concealedGp];
+            if (readyTiles.length == 1) {
+                let lastGp = groups.filter(g => g.isSequence && g.tiles.filter(t => t.id === tile.id).length > 0);
+                if (lastGp.length == 1) {
+                    if (lastGp[0].tiles[1].id == tile.id) {
+                        result.push({
+                            id: 'ReadyHole',
+                            name: '中洞',
+                            point: 1
+                        });
+                    }
+                    else if (lastGp[0].tiles[2].id == tile.id && tile.rank == 3) {
+                        result.push({
+                            id: 'ReadyEdge_3',
+                            name: '邊張',
+                            point: 1
+                        });
+                    }
+                    else if (lastGp[0].tiles[0].id == tile.id && tile.rank == 7) {
+                        result.push({
+                            id: 'ReadyEdge_7',
+                            name: '邊張',
+                            point: 1
+                        });
+                    }
+                }
+            }
+            return result;
+        }
+    }
+}
+
+function PinHuPattern() {
+    return {
+        Match: function (option) {
+            let result = [];
+            let { exposedGp, concealedGp, exposed, concealed, tile, isSelfDrawn, readyTiles } = option;
+
+            //無花 => 排除 有花
+            if (exposed.filter(t => t.isFlower).length > 0)
+                return result;
+            //無字 => 排除 有字
+            if (exposed.filter(t => t.isHonor).length > 0)
+                return result;
+            if (concealed.filter(t => t.isHonor).length > 0)
+                return result;
+            //非自摸 => 排除 自摸
+            if (isSelfDrawn)
+                return result;
+            //非中洞、非邊張、非單釣 => 排除聽一張
+            if (readyTiles.length < 2)
+                return result;
+
+            let groups = [...concealedGp];
+            exposedGp.forEach(t => groups.push(t));
+
+            //順子 & 將眼 組成
+            if (groups.filter(g => g.isSequence).length != 5)
+                return result;
+            if (groups.filter(g => g.isPair).length != 1)
+                return result;
+
+            if (readyTiles.length == 2) {
+                let lastGp = groups.filter(g => g.isSequence && g.tiles.filter(t => t.id === tile.id).length > 0);
+                //12345 聽36, 不計平胡 
+                if (tile.rank == 3 && lastGp.filter(g => g.tiles[0].rank == 1).length > 0)
+                    return result;
+                //56789 聽47, 不計平胡
+                if (tile.rank == 7 && lastGp.filter(g => g.tiles[2].rank == 9).length > 0)
+                    return result;
+                result.push({
+                    id: 'PinHu',
+                    name: '平胡',
+                    point: 2
+                });
+            }
+            return result;
+        }
+    }
+}
+
+//全求
+function BeggarPattern() {
+    return {
+        Match: function (option) {
+            let result = [];
+            let { exposedGp, concealedGp, exposed, concealed, tile, isSelfDrawn, readyTiles } = option;
+            let groups = [...concealedGp];
+            if (groups.length == 1 && groups[0].isPair) {
+                result.push({
+                    id: 'Beggar',
+                    name: '全求',
+                    point: 2
+                });
+            }
+            return result;
+        }
+    }
 }
 
 function PatternSvc() {
@@ -947,6 +1105,10 @@ function PatternSvc() {
     patternMatchs.push(new ConcealedTripletsPattern());
     patternMatchs.push(new AllConcealedHandPattern());
     patternMatchs.push(new BookmakerPattern());
+    patternMatchs.push(new ReadySinglePattern());
+    patternMatchs.push(new ReadyHoleEdgePattern());
+    patternMatchs.push(new PinHuPattern());
+    patternMatchs.push(new BeggarPattern());
     return {
         Matchs: function (option) {
             let result = [];
@@ -1128,9 +1290,215 @@ function TileGroupSvc() {
             }
         }
         return tileGroups;
-    }
+    };
+    let __findKongFix = (kongGroup, isExposed) => {
+        if (kongGroup.length > 2) {
+            for (let j = 0; j < kongGroup.length - 2; j++) {
+                const kg = kongGroup[j];
+                let somekongGroup = kongGroup.filter(g =>
+                    g.tiles[0].isDot == kg.tiles[0].isDot &&
+                    g.tiles[0].isBamboo == kg.tiles[0].isBamboo &&
+                    g.tiles[0].isCharacter == kg.tiles[0].isCharacter);
+                if (kg.tiles[0].rank < 8 &&
+                    somekongGroup.filter(g => g.tiles[0].rank == kg.tiles[0].rank + 1).length > 0 &&
+                    somekongGroup.filter(g => g.tiles[0].rank == kg.tiles[0].rank + 2).length > 0) {
+
+                    let meld = [
+                        kg.tiles.splice(0, 1)[0],
+                        somekongGroup.find(g => g.tiles[0].rank == kg.tiles[0].rank + 1).tiles.splice(0, 1)[0],
+                        somekongGroup.find(g => g.tiles[0].rank == kg.tiles[0].rank + 2).tiles.splice(0, 1)[0]
+                    ];
+                    kg.isKong = false;
+                    kg.isTriplet = true;
+                    somekongGroup.find(g => g.tiles[0].rank == kg.tiles[0].rank + 1).isKong = false;
+                    somekongGroup.find(g => g.tiles[0].rank == kg.tiles[0].rank + 1).isTriplet = true;
+                    somekongGroup.find(g => g.tiles[0].rank == kg.tiles[0].rank + 2).isKong = false;
+                    somekongGroup.find(g => g.tiles[0].rank == kg.tiles[0].rank + 2).isTriplet = true;
+                    // subs[j].tiles.splice(0, subs[j].tiles.length);
+                    return TileGroup.create({
+                        isMeld: true,
+                        isTriplet: false,
+                        isKong: false,
+                        isSequence: true,
+                        isExposed: isExposed,
+                        tiles: meld,
+                    });
+                }
+            }
+        }
+        return null;
+    };
     let allTiles = SearchTile();
     return {
+        CanWinOrCanWin(option) {
+            let { inIds, outIds, lastId, isSelfDrawn, prevailingId, dealerId, isBookmaker, bookmakerRank } = option;
+            isSelfDrawn = isSelfDrawn === true;
+            bookmakerRank = bookmakerRank === true;
+            if (prevailingId)
+                prevailing = allTiles.result.datas.find((t, index, ary) => t.id == prevailingId);
+            if (dealerId)
+                dealer = allTiles.result.datas.find((t, index, ary) => t.id == dealerId);
+            let reset = (id) => {
+                let concealed = [];
+                let exposed = [];
+                let tile = null;
+                if (inIds)
+                    inIds.map(id => allTiles.result.datas.find((t, index, ary) => t.id == id)).forEach(t => {
+                        if (t)
+                            concealed.push(t);
+                    });
+
+                if (outIds)
+                    outIds.map(id => allTiles.result.datas.find((t, index, ary) => t.id == id)).forEach(t => {
+                        if (t)
+                            exposed.push(t);
+                    });
+                tile = allTiles.result.datas.find((t, index, ary) => t.id == id);
+                return {
+                    concealed,
+                    exposed,
+                    tile
+                }
+            };
+            let result = {
+                canWin: false,
+                readyTiles: []
+            };
+            let readyTiles = [];
+            let readyInfo = [];
+            for (let i = 1; i <= 42; i++) {
+                let win = true;;
+                let tileGroups = [];
+                let { concealed, exposed, tile } = reset(i);
+                concealed.push(tile);
+                concealed = concealed.sort((a, b) => a.id - b.id);
+                exposed = exposed.sort((a, b) => a.id - b.id);
+
+                //摸到的牌不會操過4張
+                if (concealed.filter(t => t.id == tile.id).length + exposed.filter(t => t.id == tile.id).length > tile.count) {
+                    win = false;
+                }
+
+                //檢查外面的牌
+                let exposedGp = __meldMapping(true, exposed, allTiles);
+                if (exposedGp == null)
+                    win = false;
+                exposedGp.forEach(tg => tileGroups.push(tg));
+
+                //檢查裡面的牌
+                concealedGp = __meldMapping(false, concealed, allTiles);
+                if (concealedGp == null) win = false;
+                concealedGp.forEach(tg => tileGroups.push(tg));
+
+                //檢查將眼
+                if (tileGroups.filter(tg => tg.isPair).length !== 1) win = false;
+
+                //組數不夠時, 檢查槓牌是否能組順子
+                if (win && tileGroups.filter(tg => tg.isKong).length > 2 &&
+                    tileGroups.filter(tg => tg.isMeld).length == 4) {
+                    let fixGroup = __findKongFix(exposedGp.filter(tg => tg.isKong &&
+                        (tg.tiles[0].isDot || tg.tiles[0].isBamboo || tg.tiles[0].isCharacter)).sort((a, b) => a.tiles[0].id - b.tiles[0].id), true);
+                    if (fixGroup != null) {
+                        exposedGp.push(fixGroup);
+                        tileGroups.push(fixGroup);
+                    }
+                    else if (fixGroup == null) {
+                        fixGroup = __findKongFix(concealedGp.filter(tg => tg.isKong &&
+                            (tg.tiles[0].isDot || tg.tiles[0].isBamboo || tg.tiles[0].isCharacter)).sort((a, b) => a.tiles[0].id - b.tiles[0].id), false);
+                        if (fixGroup != null) {
+                            concealedGp.push(fixGroup);
+                            tileGroups.push(fixGroup);
+                        }
+                    }
+                }
+
+                //最後一張不會是暗槓
+                if (concealedGp.filter(tg => tg.isKong && tg.tiles[0].id == tile.id).length > 0)
+                    win = false;
+
+                //檢查組數 
+                if (tileGroups.filter(tg => tg.isMeld).length !== 5) win = false;
+                readyTiles.push(tile);
+                readyInfo.push({ win, concealedGp, exposedGp, concealed, exposed, tile });
+            };
+            readyInfo.forEach(rt => {
+                if (rt.win)
+                    result.readyTiles.push(rt.tile);
+            });
+            if (readyInfo.filter(t => t.win && t.tile.id == lastId).length > 0) {
+                let { concealedGp, exposedGp, concealed, exposed, tile } = readyInfo.filter(t => t.win && t.tile.id == lastId)[0];
+                result.canWin = true;
+                result.patterns = patternSvc.Matchs({
+                    concealedGp,
+                    exposedGp,
+                    flowers: exposed.filter(t => t.isFlower),
+                    concealed,
+                    exposed,
+                    tile,
+                    isSelfDrawn,
+                    prevailing,
+                    dealer,
+                    isBookmaker,
+                    bookmakerRank,
+                    readyTiles
+                });
+            }
+            else if (lastId) {
+                if (readyInfo.filter(r =>
+                    r.tile.id == lastId &&
+                    r.concealedGp.filter(c => c.isMeld).length + r.exposedGp.filter(c => c.isMeld).length == 5 &&
+                    r.concealedGp.filter(c => c.isKong && c.tiles[0].id == lastId).length > 0).length > 0) {
+                    result.helpmsg = `建議開槓`;
+                }
+                else {
+                    let getrm = info => {
+                        let rm = [];
+                        info.concealed.forEach(t => rm.push(t));
+                        info.concealedGp.forEach(g => {
+                            g.tiles.forEach(t => {
+                                let findId = rm.findIndex((v) => v.id == t.id);
+                                if (findId > -1)
+                                    rm.splice(findId, 1);
+                            });
+                        });
+                        let findPair = aryRM => {
+                            for (let j = 0; j < aryRM.length; j++) {
+                                const e = aryRM[j];
+                                if (aryRM.filter(t => t.id == e.id).length > 1)
+                                    return e;
+                            }
+                            return null;
+                        };
+                        // if (info.concealedGp.filter(g => g.isPair).length == 0) {
+                        //     let pairTile = null
+                        //     do {
+                        //         pairTile = findPair(rm);
+                        //         if (pairTile != null) {
+                        //             rm.map((tile, idx) => { return { tile, idx }; })
+                        //                 .sort((a, b) => -(a.idx - b.idx))
+                        //                 .filter(v => v.tile.id == pairTile.id)
+                        //                 .forEach(v => rm.splice(v.idx, 1));
+                        //         }
+                        //     } while (pairTile != null)
+                        // }
+                        return rm;
+                    };
+                    let remainderInfo = readyInfo.map(r => r);
+                    remainderInfo.forEach(r => r.remainder = getrm(r));
+                    remainderInfo = remainderInfo.filter(r => r.tile.id == lastId);
+                    remainderInfo = remainderInfo.filter(r =>
+                        r.exposedGp.filter(e => e.isMeld).length * 3 +
+                        r.concealedGp.filter(e => e.isMeld).length * 3 +
+                        r.concealedGp.filter(e => e.isPair).length * 2 + r.remainder.length == 17
+                    )
+                    if (remainderInfo.length > 0) {
+                        result.remainder = remainderInfo[0].remainder;
+                    }
+                }
+            }
+
+            return result;
+        },
         CanWin: function (option) {
             let { inIds, outIds, lastId, isSelfDrawn, prevailingId, dealerId, isBookmaker, bookmakerRank } = option;
             isSelfDrawn = isSelfDrawn === true;
@@ -1201,6 +1569,43 @@ function TileGroupSvc() {
                 isBookmaker,
                 bookmakerRank
             })
+            return result;
+        },
+        Verify: function (option) {
+            let { inIds, outIds, lastId, isSelfDrawn, prevailingId, dealerId, isBookmaker, bookmakerRank } = option;
+            let tile = null;
+            let verifyTiles = []
+            let result = {
+                success: true
+            };
+            if (inIds)
+                inIds.map(id => allTiles.result.datas.find((t, index, ary) => t.id == id)).forEach(t => {
+                    if (t)
+                        verifyTiles.push(t);
+                });
+            if (outIds)
+                outIds.map(id => allTiles.result.datas.find((t, index, ary) => t.id == id)).forEach(t => {
+                    if (t)
+                        verifyTiles.push(t);
+                });
+            if (lastId)
+                tile = allTiles.result.datas.find((t, index, ary) => t.id == lastId);
+
+            if (tile != null) {
+                verifyTiles.push(tile);
+            }
+
+            verifyTiles = verifyTiles.sort((a, b) => a.id - b.id);
+            verifyTiles = verifyTiles.sort((a, b) => a.id - b.id);
+
+            for (let i = 0; i < allTiles.result.datas.length; i++) {
+                const tile = allTiles.result.datas[i];
+                if (verifyTiles.filter(t => t.id == tile.id).length > tile.count) {
+                    result.success = false;
+                    result.error = `這副牌有問題!! [${tile.name}]居然有${verifyTiles.filter(t => t.id == tile.id).length}張`;
+                    break;
+                }
+            }
             return result;
         }
     };
