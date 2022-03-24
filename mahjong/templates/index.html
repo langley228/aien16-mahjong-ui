@@ -13,10 +13,11 @@
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
   <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script> -->
-  <link href="{{ url_for('static', filename='styles/base.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='styles/base.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='styles/switch.css') }}" rel="stylesheet" />
 </head>
 
-<body class="bgColor">
+<body class="bgColor" >
   <div class="row" style="width: 780px; padding: 10px">
     <label for="selmodel" class="col-sm-1 col-form-label">模型</label>
     <div class="spinner-border" role="status">
@@ -39,12 +40,22 @@
       </select>
     </div>
     <div class="col-sm-3">
-      <input type="button" class="btn btn-outline-success" value="確定" onclick="btnClick()" />
+      <label class="switch">
+        <input type="checkbox" id="togBtn" checked />
+        <div class="slider round">
+          <!--ADDED HTML -->
+          <span class="on" style="font-size: 20px; left: 40px">胡牌</span>
+          <span class="off" style="font-size: 20px; left: 50px">聽牌</span>
+          <!--END-->
+        </div>
+      </label>
+      <input type="button" class="btn btn-outline-success" value="確定" onclick="btnClick()" style="display: none" />
     </div>
   </div>
-  <div class="progress" style="width: 640px;">
+  <div class="progress" style="width: 640px">
     <div class="progress-bar bg-warning"></div>
   </div>
+  <div id="errorMsg" style="color: red;display: none;" >無法啟動你的相機!!</div>
   <div style="width: 98%; padding: 5px">
     <!-- <video autoplay muted id="video"></video> -->
     <!-- for iphone-->
@@ -68,6 +79,7 @@
   </div>
   <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='js/TileGroupSvc.js') }}"></script>
   <script>
     const color = [
       "green",
@@ -188,7 +200,11 @@
             uidata.inIds.push(a.id);
             break;
           case 3:
-            uidata.lastId = a.id;
+            if ($("#togBtn").prop("checked")) {
+              uidata.lastId = a.id;
+            } else {
+              uidata.inIds.push(a.id);
+            }
             break;
           default:
             break;
@@ -217,7 +233,15 @@
           },
           facingMode: "environment",
         },
-      });
+      }).catch(function (error) {
+        console.log(error)
+        $('#togBtn').prop("disabled", true);
+        $("#selmodel").prop("disabled", true);
+        $(".progress-bar").parent().hide();
+        $(".spinner-border").hide();
+        $("#errorMsg").show()
+        // code for when there is an error
+      });;
       video.srcObject = stream;
 
       return new Promise((resolve) => {
@@ -386,7 +410,7 @@
       ctx = canvas.getContext("2d");
       ctx.font = "20px Arial";
       /*
-      
+
     <div class="progress">
       <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
@@ -395,15 +419,15 @@
       async function loadModel() {
         $(".spinner-border").show();
         $(".progress-bar").parent().show();
-        $(".progress-bar").css('width', '1%');
+        $(".progress-bar").css("width", "1%");
         $("table").hide();
         $("#selmodel").prop("disabled", true);
         $("canvas").hide();
         console.log(`loadModel start ${$("#selmodel").val()} `);
         return await tf.loadGraphModel($("#selmodel").val(), {
           onProgress: function (fraction) {
-            console.log((fraction * 100).toFixed() + '%');
-            $(".progress-bar").css('width', (fraction * 100).toFixed() + '%');
+            console.log((fraction * 100).toFixed() + "%");
+            $(".progress-bar").css("width", (fraction * 100).toFixed() + "%");
             if (fraction == 1) {
               $(".progress-bar").parent().hide();
               $(".spinner-border").hide();

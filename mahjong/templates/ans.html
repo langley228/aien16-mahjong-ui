@@ -1,120 +1,70 @@
 {% extends "base.html" %} {% block content %}
-<link
-  href="{{ url_for('static', filename='styles/ans.css') }}"
-  rel="stylesheet"
-/>
-<link
-  href="{{ url_for('static', filename='styles/button.css') }}"
-  rel="stylesheet"
-/>
+<link href="{{ url_for('static', filename='styles/ans.css') }}" rel="stylesheet" />
+<link href="{{ url_for('static', filename='styles/button.css') }}" rel="stylesheet" />
+<link href="{{ url_for('static', filename='styles/switch.css') }}" rel="stylesheet" />
 
 <body>
   <div id="divData" class="container">
     <h2>
-      <button class="button-54" style="margin-right: 20px">清除</button
-      ><b>吃、碰、明槓</b>
+      <button class="button-54" style="margin-right: 20px">清除</button><b>吃、碰、明槓</b>
     </h2>
     <div class="tile-group drag-drop-container" id="outgroup"></div>
     <br />
     <h2>
-      <button class="button-54" style="margin-right: 20px">清除</button
-      ><b>手牌</b>
+      <button class="button-54" style="margin-right: 20px">清除</button><b>手牌</b>
     </h2>
     <div class="tile-group drag-drop-container" id="ingroup"></div>
     <br />
     <div class="containerGp">
       <h2>
         <button class="button-54" style="margin-right: 20px; display: none">
-          清除</button
-        ><b>
-          <input
-            type="checkbox"
-            class="btn-check"
-            id="checkSelfDrawn"
-            autocomplete="off"
-            checked
-          />
-          <label
-            class="btn btn-outline-primary selfDrawnChk"
-            for="checkSelfDrawn"
-            id="selfDrawnLabel"
-            ><b>自摸</b></label
-          ></b
-        >
-      </h2>      
+          清除
+        </button>
+        <b>
+          <label class="switch">
+            <input type="checkbox" id="checkSelfDrawn" checked />
+            <div class="slider round">
+              <!--ADDED HTML -->
+              <span class="on" style="font-size: 17px; left: 40px">自摸</span>
+              <span class="off" style="font-size: 17px; left: 50px">放槍</span>
+              <!--END-->
+            </div>
+          </label>
+        </b>
+      </h2>
       <br />
-      <div
-        class="tile-group drag-drop-container"
-        id="lastgroup"
-        style="width: 70px"
-      ></div>
+      <div class="tile-group drag-drop-container" id="lastgroup" style="width: 70px"></div>
     </div>
-    <br>
+    <br />
     <div class="containerGp">
-      <span style="display: inline-block; width: 20px; word-wrap: break-word"
-        >圈風</span
-      >
+      <span style="display: inline-block; width: 20px; word-wrap: break-word">圈風</span>
       <div class="tile-group" id="prevailing">
         <div class="tile-div wind sel">
-          <img
-            class="tile"
-            src="{{ url_for('static', filename='Regular/windeast.png') }}"
-            data-id="28"
-          />
+          <img class="tile" src="{{ url_for('static', filename='Regular/windeast.png') }}" data-id="28" />
         </div>
         <div class="tile-div wind">
-          <img
-            class="tile"
-            src="{{ url_for('static', filename='Regular/windsouth.png') }}"
-            data-id="29"
-          />
+          <img class="tile" src="{{ url_for('static', filename='Regular/windsouth.png') }}" data-id="29" />
         </div>
         <div class="tile-div wind">
-          <img
-            class="tile"
-            src="{{ url_for('static', filename='Regular/windwest.png') }}"
-            data-id="30"
-          />
+          <img class="tile" src="{{ url_for('static', filename='Regular/windwest.png') }}" data-id="30" />
         </div>
         <div class="tile-div wind">
-          <img
-            class="tile"
-            src="{{ url_for('static', filename='Regular/windnorth.png') }}"
-            data-id="31"
-          />
+          <img class="tile" src="{{ url_for('static', filename='Regular/windnorth.png') }}" data-id="31" />
         </div>
       </div>
-      <span style="display: inline-block; width: 20px; word-wrap: break-word"
-        >門風</span
-      >
+      <span style="display: inline-block; width: 20px; word-wrap: break-word">門風</span>
       <div class="tile-group" id="dealer">
         <div class="tile-div wind sel">
-          <img
-            class="tile"
-            src="{{ url_for('static', filename='Regular/windeast.png') }}"
-            data-id="28"
-          />
+          <img class="tile" src="{{ url_for('static', filename='Regular/windeast.png') }}" data-id="28" />
         </div>
         <div class="tile-div wind">
-          <img
-            class="tile"
-            src="{{ url_for('static', filename='Regular/windsouth.png') }}"
-            data-id="29"
-          />
+          <img class="tile" src="{{ url_for('static', filename='Regular/windsouth.png') }}" data-id="29" />
         </div>
         <div class="tile-div wind">
-          <img
-            class="tile"
-            src="{{ url_for('static', filename='Regular/windwest.png') }}"
-            data-id="30"
-          />
+          <img class="tile" src="{{ url_for('static', filename='Regular/windwest.png') }}" data-id="30" />
         </div>
         <div class="tile-div wind">
-          <img
-            class="tile"
-            src="{{ url_for('static', filename='Regular/windnorth.png') }}"
-            data-id="31"
-          />
+          <img class="tile" src="{{ url_for('static', filename='Regular/windnorth.png') }}" data-id="31" />
         </div>
       </div>
     </div>
@@ -129,351 +79,157 @@
     <!--  取消單擊選牌改用拖曳 display: none; -->
     <div>
       <h3>
-        <input
-          class="btn-check"
-          type="radio"
-          id="radio0"
-          name="radioSel"
-          value="0"
-          data-group="outgroup"
-        />
-        <label class="btn btn-outline-danger" for="radio0"
-          ><b>吃、碰、明槓</b></label
-        >
-        <input
-          class="btn-check"
-          type="radio"
-          id="radio1"
-          name="radioSel"
-          value="1"
-          data-group="ingroup"
-          checked
-        />
+        <input class="btn-check" type="radio" id="radio0" name="radioSel" value="0" data-group="outgroup" />
+        <label class="btn btn-outline-danger" for="radio0"><b>吃、碰、明槓</b></label>
+        <input class="btn-check" type="radio" id="radio1" name="radioSel" value="1" data-group="ingroup" checked />
         <label class="btn btn-outline-danger" for="radio1"><b>手牌</b></label>
-        <input
-          class="btn-check"
-          type="radio"
-          id="radio2"
-          name="radioSel"
-          value="2"
-          data-group="lastgroup"
-        />
-        <label class="btn btn-outline-danger selfDrawnChk" for="radio2"
-          ><b>自摸</b></label
-        >
+        <input class="btn-check" type="radio" id="radio2" name="radioSel" value="2" data-group="lastgroup" />
+        <label class="btn btn-outline-danger selfDrawnChk" for="radio2"><b>自摸</b></label>
       </h3>
     </div>
     <br />
     <div id="source1" class="tile-group dragSource">
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/dot1.png') }}"
-          data-id="1"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/dot1.png') }}" data-id="1" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/dot2.png') }}"
-          data-id="2"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/dot2.png') }}" data-id="2" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/dot3.png') }}"
-          data-id="3"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/dot3.png') }}" data-id="3" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/dot4.png') }}"
-          data-id="4"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/dot4.png') }}" data-id="4" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/dot5.png') }}"
-          data-id="5"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/dot5.png') }}" data-id="5" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/dot6.png') }}"
-          data-id="6"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/dot6.png') }}" data-id="6" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/dot7.png') }}"
-          data-id="7"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/dot7.png') }}" data-id="7" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/dot8.png') }}"
-          data-id="8"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/dot8.png') }}" data-id="8" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/dot9.png') }}"
-          data-id="9"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/dot9.png') }}" data-id="9" />
       </div>
     </div>
     <br />
     <div id="source2" class="tile-group dragSource">
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/bamboo1.png') }}"
-          data-id="10"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/bamboo1.png') }}" data-id="10" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/bamboo2.png') }}"
-          data-id="11"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/bamboo2.png') }}" data-id="11" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/bamboo3.png') }}"
-          data-id="12"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/bamboo3.png') }}" data-id="12" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/bamboo4.png') }}"
-          data-id="13"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/bamboo4.png') }}" data-id="13" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/bamboo5.png') }}"
-          data-id="14"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/bamboo5.png') }}" data-id="14" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/bamboo6.png') }}"
-          data-id="15"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/bamboo6.png') }}" data-id="15" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/bamboo7.png') }}"
-          data-id="16"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/bamboo7.png') }}" data-id="16" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/bamboo8.png') }}"
-          data-id="17"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/bamboo8.png') }}" data-id="17" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/bamboo9.png') }}"
-          data-id="18"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/bamboo9.png') }}" data-id="18" />
       </div>
     </div>
     <br />
     <div id="source3" class="tile-group dragSource">
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/character1.png') }}"
-          data-id="19"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/character1.png') }}" data-id="19" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/character2.png') }}"
-          data-id="20"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/character2.png') }}" data-id="20" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/character3.png') }}"
-          data-id="21"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/character3.png') }}" data-id="21" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/character4.png') }}"
-          data-id="22"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/character4.png') }}" data-id="22" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/character5.png') }}"
-          data-id="23"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/character5.png') }}" data-id="23" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/character6.png') }}"
-          data-id="24"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/character6.png') }}" data-id="24" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/character7.png') }}"
-          data-id="25"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/character7.png') }}" data-id="25" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/character8.png') }}"
-          data-id="26"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/character8.png') }}" data-id="26" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/character9.png') }}"
-          data-id="27"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/character9.png') }}" data-id="27" />
       </div>
     </div>
     <br />
     <div id="source4" class="tile-group dragSource">
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/windeast.png') }}"
-          data-id="28"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/windeast.png') }}" data-id="28" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/windsouth.png') }}"
-          data-id="29"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/windsouth.png') }}" data-id="29" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/windwest.png') }}"
-          data-id="30"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/windwest.png') }}" data-id="30" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/windnorth.png') }}"
-          data-id="31"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/windnorth.png') }}" data-id="31" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/dragonred.png') }}"
-          data-id="32"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/dragonred.png') }}" data-id="32" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/dragongreen.png') }}"
-          data-id="33"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/dragongreen.png') }}" data-id="33" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/dragonwhite.png') }}"
-          data-id="34"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/dragonwhite.png') }}" data-id="34" />
       </div>
     </div>
     <br />
     <div id="source5" class="tile-group dragSource">
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/springflower.png') }}"
-          data-id="35"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/springflower.png') }}" data-id="35" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/summerflower.png') }}"
-          data-id="36"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/summerflower.png') }}" data-id="36" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/fallflower.png') }}"
-          data-id="37"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/fallflower.png') }}" data-id="37" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/winterflower.png') }}"
-          data-id="38"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/winterflower.png') }}" data-id="38" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/Plumflower.png') }}"
-          data-id="39"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/Plumflower.png') }}" data-id="39" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/Orchidflower.png') }}"
-          data-id="40"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/Orchidflower.png') }}" data-id="40" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/Chrysanthemumflower.png') }}"
-          data-id="41"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/Chrysanthemumflower.png') }}" data-id="41" />
       </div>
       <div class="tile-div">
-        <img
-          class="tile"
-          src="{{ url_for('static', filename='Regular/Bambooflower.png') }}"
-          data-id="42"
-        />
+        <img class="tile" src="{{ url_for('static', filename='Regular/Bambooflower.png') }}" data-id="42" />
       </div>
     </div>
   </div>
-  <div id="ans" class="modal " tabindex="-1">
+  <div id="ans" class="modal" tabindex="-1">
     <div class="modal-dialog text-white">
       <div class="modal-content bg-secondary">
         <div class="modal-header">
@@ -481,19 +237,20 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div class="container-fluid" style="text-align: left;" >  
-            
+          <div class="container-fluid" style="text-align: left">
+            <table>
+              <tbody></tbody>
+            </table>
           </div>
         </div>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close" >Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+          Close
+        </button>
       </div>
     </div>
   </div>
-  <script
-    src="https://code.jquery.com/jquery-3.6.0.min.js"
-    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-    crossorigin="anonymous"
-  ></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 
   <script src="{{ url_for('static', filename='js/TileGroupSvc.js') }}"></script>
 
@@ -575,6 +332,20 @@
       });
 
     $("#divData").on("click", ".tile-div:not(.wind)", function () {
+      let group = $(this).parent().attr("id");
+      switch (group) {
+        case "outgroup":
+          $('input[name="radioSel"][value="0"]').click();
+          break;
+        case "ingroup":
+          $('input[name="radioSel"][value="1"]').click();
+          break;
+        case "lastgroup":
+          $('input[name="radioSel"][value="2"]').click();
+          break;
+        default:
+          break;
+      }
       $(this).remove();
     });
 
@@ -587,7 +358,7 @@
       if ($(this).prop("checked")) {
         $(".selfDrawnChk").html("<b>自摸</b>");
       } else {
-        $(".selfDrawnChk").html("<b>胡牌</b>");
+        $(".selfDrawnChk").html("<b>放槍</b>");
       }
     });
 
@@ -636,6 +407,8 @@
         $("#lastgroup").append(tile[0].outerHTML);
       });
     }
+
+
     $("#btnCallApi").click(function () {
       let $outgroup = $("#outgroup img.tile");
       let $ingroup = $("#ingroup img.tile");
@@ -669,32 +442,94 @@
         reqData.dealerId = Number($($dealer[0]).data("id"));
       }
 
-      let data = tileGroupSvc.CanWin(reqData);
-      
       let ansModel = new bootstrap.Modal(document.getElementById("ans"), {
         keyboard: false,
       });
-      $('.modal-body > .container-fluid').empty();
-      $('.modal-body > .container-fluid').append("<br />");
+      let $tbody = $(".modal-body > .container-fluid > table > tbody");
+      $tbody.empty();
+      // $(".modal-body > .container-fluid").empty();
+      // $(".modal-body > .container-fluid").append("<br />");
+
+      let verifyInfo = tileGroupSvc.Verify(reqData);
+      if (!verifyInfo.success) {
+        $(".modal-header > .modal-title").text("詐賭!!!");
+        $tbody.append("<tr><td>" + verifyInfo.error + "</td></tr>");
+        ansModel.show();
+        return;
+      }
+      let getTileHtml = id => {
+        let tile = $("#divSelTile")
+          .find('img.tile[data-id="' + id + '"]')
+          .parent();
+        return `<div class="tile-div">${tile.html()}</div>`;
+      };
+      let data = tileGroupSvc.CanWinOrCanWin(reqData);
       let title = "胡了!";
       if (data.canWin) {
+        let lastTile = null;
+        $tbody.append("<tr><td>聽</td></tr>");
+        let $td = $('<td></td>');
+        let $tr = $('<tr></tr>');
+        data.readyTiles.forEach((p, idx) => {
+          $td.append(getTileHtml(p.id));
+          if (p.id == reqData.lastId) lastTile = p;
+        });
+        $tr.append($td);
+        $tbody.append($tr);
+        $tbody.append("<tr><td>胡</td></tr>");
+        $td = $('<td></td>');
+        $tr = $('<tr></tr>');
+        $td.append(getTileHtml(lastTile.id));
+        $tr.append($td);
+        $tbody.append($tr);
         let points = 0;
         if (data.patterns.length) {
           data.patterns.forEach((p) => {
-            $('.modal-body > .container-fluid').append("<br />" + p.name + " " + p.point + " 台");
+            $tbody.append("<tr><td>" + p.name + " " + p.point + " 台</td></tr>");
             points += p.point;
           });
-            $('.modal-body > .container-fluid').append("<br />" + "共 " + points + " 台");
+          $tbody.append("<tr><td>共 " + points + " 台</td></tr>");
         } else {
           title = "雞胡!!";
-          $('.modal-body > .container-fluid').append("雞胡!!");
+        }
+      } else if ($lastgroup.length == 0) {
+        if (data.readyTiles.length > 0) {
+          title = "聽牌";
+          $tbody.append("<tr><td>聽</td></tr>");
+          let $td = $('<td></td>');
+          let $tr = $('<tr></tr>');
+          data.readyTiles.forEach((p, idx) => {
+            $td.append(getTileHtml(p.id));
+            if (p.id == reqData.lastId) lastTile = p;
+          });
+          $tr.append($td);
+          $tbody.append($tr);
+        } else {
+          title = "沒有聽牌";
+          $tbody.append("<tr><td>沒有聽牌 !!!</td></tr>");
         }
       } else {
-        title ="相公";
-        $('.modal-body > .container-fluid').append("相公 !!!");
+        if (data.helpmsg) {
+          title = "建議";
+          $tbody.append("<tr><td>" + data.helpmsg + "</td></tr>");
+        } else if (data.remainder && data.remainder.length > 0) {
+          title = "沒有胡牌";
+          $tbody.append("<tr><td>建議出牌</td></tr>");
+          let $td = $('<td></td>');
+          let $tr = $('<tr></tr>');
+          data.remainder.forEach((p, idx) => {
+            $td.append(getTileHtml(p.id));
+          });
+          $tr.append($td);
+          $tbody.append($tr);
+        }
+        else {
+          title = "相公";
+          $tbody.append("<tr><td>相公 !!!</td></tr>");
+        }
       }
 
-      $('.modal-header > .modal-title').text(title);
+      $(".modal-header > .modal-title").text(title);
       ansModel.show();
       // $.ajax({
       //   type: "post",
@@ -724,7 +559,6 @@
       //     console.log(data)
       // });
     });
-
   </script>
 </body>
 {% endblock %}
